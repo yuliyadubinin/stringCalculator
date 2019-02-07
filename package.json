@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "Yuliya Dubinin <yuliyadubinin@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^24.1.0",
+    "typescript": "^3.3.1"
+  }
 }
