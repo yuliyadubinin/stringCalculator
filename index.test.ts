@@ -5,7 +5,7 @@ describe("StringCalculator", function() {
       expect(StringCalculator.add('')).toBe(0);
     });
 
-    test("should not allow negative numbers", function() {
+    test("Should not allow negative numbers", function() {
       expect(() => StringCalculator.add("-5")).toThrowError(
         'No negative values are allowed: -5'
       );
@@ -37,18 +37,9 @@ describe("StringCalculator", function() {
     });
 
     test("Should allow two delimiters in between the input number string", function() {
-      expect(StringCalculator.add("//[??]10??10")).toBe(20);
+      expect(StringCalculator.add("//[??]10??20")).toBe(30);
     });
 
-    test.only("Should allow multi delimiter in between the input number string", function() {
-      expect(StringCalculator.add("//[***][&&&&]1***3&&&&10")).toBe(14);
-    });
-
-    /*test("Should allow any length of delimiter in between the input number string", function() {
-      expect(
-        StringCalculator.add("//[*][%]\n1*2%3")
-      ).toBe(11);
-    });*/
 
     test("Should return the sum of an unknown amount of numbers", function() {
       expect(StringCalculator.add("10,10,30,1,5")).toBe(56);
