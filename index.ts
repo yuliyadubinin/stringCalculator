@@ -1,115 +1,86 @@
 export class StringCalculator {
-  static add(arg: string): number | undefined {
-    var processed_delimiter_str = arg;
+  static add(inputString: string): number | undefined {
     var separator = /,|\n/;
+    var delim = "";
 
-    var delim = ""; 
-   
-    var values;
-    var sum = 0;
-    var invalidValues = [];
-    var start_of_delimiter = "//";
-    var start_of_multi_char_delimiter = "[";
-    var end_of_multi_char_delimiter = "]";
-    var temp_end_string_index = 0;
+    var startOfDelim = "//";
+    var startOfMultiDelim = "[";
+    var endOfMultiDelim = "]";
+    var tempEndStringIndex = 0;
+    var arrayOfNumbers = [];
 
     // delimiters that start from "//"
-    if (processed_delimiter_str.indexOf(start_of_delimiter) === 0) {
-      processed_delimiter_str = processed_delimiter_str.slice(2); // remove start_of_delimiter //
-      if (
-        processed_delimiter_str.indexOf(start_of_multi_char_delimiter) === 0
-      ) {
-        processed_delimiter_str = processed_delimiter_str.slice(1); // remove first char from left (start_of_multi_char_delimiter)
-        temp_end_string_index = processed_delimiter_str.indexOf(
-          end_of_multi_char_delimiter
-        );
-        const rest = processed_delimiter_str.slice(3);
-        delim = processed_delimiter_str.slice(0, 1); // assigning first char after removed //
+    if (inputString.indexOf(startOfDelim) === 0) {
+      inputString = inputString.slice(2); // remove startOfDelim //
+      if (inputString.indexOf(startOfMultiDelim) === 0) {
+        inputString = inputString.slice(1); // remove first char from left (startOfMultiDelim)
+        tempEndStringIndex = inputString.indexOf(endOfMultiDelim);
+        const rest = inputString.slice(3);
+        delim = inputString.slice(0, 1); // assigning first char after removed //
         const array = rest.split(delim).filter(Boolean);
 
-        values = array;
-        for (let value of values) {
-          var numberValue = parseInt(value);
-          if (numberValue < 0) {
-            invalidValues.push(numberValue);
-          } else if (arg.match(separator)) {
-            sum += numberValue > 1000 ? 0 : numberValue;
-          } else {
-            sum += numberValue > 1000 ? 0 : numberValue;
-          }
+        // convert array of strings to array of numbers
+        for (var i = 0; i < array.length; i++) {
+          arrayOfNumbers[i] = Number(array[i]);
         }
-        if (invalidValues.length) {
-          throw new Error(
-            "No negative values are allowed: " + invalidValues.join(",")
-          );
-        }
-        return sum || 0;
+        return this.calcSum(arrayOfNumbers);
       }
 
       // trying to find second multi char delimiter
-      if (
-        processed_delimiter_str.indexOf(start_of_multi_char_delimiter) === 0
-      ) {
-        processed_delimiter_str = processed_delimiter_str.slice(1); // remove first char from left (start_of_multi_char_delimiter)
-        temp_end_string_index = processed_delimiter_str.indexOf(
-          end_of_multi_char_delimiter
-        );
-        processed_delimiter_str = processed_delimiter_str.slice(
-          temp_end_string_index + 1
-        );
-        delim = processed_delimiter_str.slice(0, 1); // assigning first char after removed //
+      if (inputString.indexOf(startOfMultiDelim) === 0) {
+        inputString = inputString.slice(1); // remove first char from left (startOfMultiDelim)
+        tempEndStringIndex = inputString.indexOf(endOfMultiDelim);
+        delim = inputString.slice(0, tempEndStringIndex);
+        inputString = inputString.slice(tempEndStringIndex + 1);
       }
 
-      // finding single delimiter
-      if (processed_delimiter_str.indexOf("\n") === 1) {
-        const rest = processed_delimiter_str.slice(2);
-        delim = processed_delimiter_str.slice(0, 1); // assigning first char after removed //
+      // finding explicit delimiter
+      if (inputString.indexOf("\n") === 1) {
+        const rest = inputString.slice(2);
+        delim = inputString.slice(0, 1);
         const array = rest.split(delim);
-        values = array;
-        for (let value of values) {
-          var numberValue = parseInt(value);
-          if (numberValue < 0) {
-            invalidValues.push(numberValue);
-          } else if (arg.match(separator)) {
-            sum += numberValue > 1000 ? 0 : numberValue;
-          } else {
-            sum += numberValue > 1000 ? 0 : numberValue;
-          }
-        }
-        if (invalidValues.length) {
-          throw new Error(
-            "No negative values are allowed: " + invalidValues.join(",")
-          );
-        }
-        return sum || 0;
-      }
 
-    } else {
-      if (arg === "") {
-        return 0;
-      } else {
-        values = arg.split(separator);
-        for (let value of values) {
-          var numberValue = parseInt(value);
-          if (numberValue < 0) {
-            invalidValues.push(numberValue);
-          } else if (arg.match(separator)) {
-            sum += numberValue > 1000 ? 0 : numberValue;
-          } else {
-            sum += numberValue > 1000 ? 0 : numberValue;
-          }
+        // convert array of strings to array of numbers
+        for (var i = 0; i < array.length; i++) {
+          arrayOfNumbers[i] = Number(array[i]);
         }
-        if (invalidValues.length) {
-          throw new Error(
-            "No negative values are allowed: " + invalidValues.join(",")
-          );
-        }
-        return sum || 0;
+        //StringCalculator.convertToNumbers(array);
+        return this.calcSum(arrayOfNumbers);
       }
+    } else {
+      if (inputString === "") {
+        return 0;
+      }
+      var values;
+      values = inputString.split(separator);
+      for (var i = 0; i < values.length; i++) {
+        arrayOfNumbers[i] = Number(values[i]);
+      }
+      return this.calcSum(arrayOfNumbers);
     }
   }
 
+  static calcSum(arrayOfNumbers: number[]): number {
+    var sum = 0;
+    var invalidValues = [];
+    var separator = /,|\n/;
+    var values = arrayOfNumbers;
+    for (let value of values) {
+      if (value < 0) {
+        invalidValues.push(value);
+      } else if (separator) {
+        sum += value > 1000 ? 0 : value;
+      } else {
+        sum += value > 1000 ? 0 : value;
+      }
+    }
+    if (invalidValues.length) {
+      throw new Error(
+        "No negative values are allowed: " + invalidValues.join(",")
+      );
+    }
+
+    console.log("calculated sum: ", sum);
+    return sum || 0;
+  }
 }
-
-
-
