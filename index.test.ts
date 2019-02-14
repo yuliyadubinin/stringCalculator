@@ -51,8 +51,16 @@ describe("StringCalculator", () => {
       expect(StringCalculator.add("//[??]15??20")).toBe(35);
     });
 
-    test("Should allow two delimiters in between the input number string", function() {
-      expect(StringCalculator.add("//[**]10**100")).toBe(110);
+    test("Should allow any length of delimiters in between the input number string", function() {
+      expect(StringCalculator.add("//[?????]25?????20")).toBe(45);
+    });
+
+    test("Should allow multiple delimiters in between the input number string", function() {
+      expect(StringCalculator.add("//[%][*]5%10*3")).toBe(18);
+    });
+
+    test("Should allow multiple delimiters in between the input number string", function() {
+      expect(StringCalculator.add("//[***][&&&&]5***3&&&&10")).toBe(18);
     });
   });
 });
